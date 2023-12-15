@@ -1,7 +1,9 @@
-package com.wallet.wallet2.CrudOperations;
+package org.wallet.CrudOperations;
 
-import com.wallet.wallet2.Models.*;
-import com.wallet.wallet2.connectionDB.*;
+import org.wallet.Components.BalanceComponent;
+import org.wallet.Models.Balance;
+import org.wallet.connectionDB.ConnectionDB;
+
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

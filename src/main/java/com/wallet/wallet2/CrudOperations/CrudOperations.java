@@ -1,4 +1,4 @@
-package com.wallet.wallet2.CrudOperations;
+package org.wallet.CrudOperations;
 
 import java.util.List;
 

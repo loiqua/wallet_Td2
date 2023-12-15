@@ -1,4 +1,4 @@
-package com.wallet.wallet2.Models;
+package org.wallet.Models;
 
 import lombok.*;
 

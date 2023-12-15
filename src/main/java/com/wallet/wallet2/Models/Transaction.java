@@ -1,6 +1,8 @@
-package com.wallet.wallet2.Models;
+package org.wallet.Models;
 
 import lombok.*;
+
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 
