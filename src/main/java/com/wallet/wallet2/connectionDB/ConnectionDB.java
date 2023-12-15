@@ -1,39 +1,39 @@
-package org.wallet.connectionDB;
+package com.wallet.wallet2.connectionDB;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class ConnectionDB {
     private static Connection connection;
 
-    public static Connection getConnection(){
+    public static Connection getConnection() {
+        if (connection != null) {
+            return connection;
+        }
+
+        String url = Objects.requireNonNull(System.getenv("DB_URL"), "DB_URL must be set");
+        String username = Objects.requireNonNull(System.getenv("DB_USER"), "DB_USER must be set");
+        String password = Objects.requireNonNull(System.getenv("DB_PASS"), "DB_PASS must be set");
+
         try {
-            if(connection == null || connection.isClosed()){
-                String url = System.getenv("DB_URL");
-                String username = System.getenv("DB_USER");
-                String password = System.getenv("DB_PASS");
-                try{
-                    connection = DriverManager.getConnection(
-                            url,username,password
-                    );
-                }catch(SQLException e){
-                    e.printStackTrace();
-                }
-            }
+            connection = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to establish a database connection", e);
         }
         return connection;
     }
 
-    public static void closeConnection(){
-        try {
-            if(connection != null && !connection.isClosed()){
-                connection.close();
+    public static void closeConnection() {
+        if (connection != null) {
+            try {
+                if (!connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException("Failed to close the database connection", e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 }
