@@ -1,13 +1,8 @@
-package org.wallet.CrudOperations;
+package com.wallet.wallet2.CrudOperations;
 
-import org.wallet.Components.AccountComponent;
-import com.wallet.Components.BalanceComponent;
-import org.wallet.Models.Account;
-import org.wallet.Models.Balance;
-import org.wallet.Models.TranferHistory;
-import org.wallet.Models.Transaction;
-import org.wallet.connectionDB.ConnectionDB;
-
+import com.wallet.wallet2.Components.*;
+import com.wallet.wallet2.Models.*;
+import com.wallet.wallet2.connectionDB.*;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -216,7 +211,10 @@ public class AccountCrudOperations implements CrudOperations<Account> {
 
     public TranferHistory makeTransfer(String debitAccount, String creditAccount, Double amount){
         if(!debitAccount.equals(creditAccount)){
-            Connection connection = ConnectionDB.getConnection();
+            try (Connection connection = ConnectionDB.getConnection()) {
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             Transaction debitTransaction = Transaction.builder()
                     .description("Transfer of "+amount+" to "+creditAccount)
                     .amount(amount)

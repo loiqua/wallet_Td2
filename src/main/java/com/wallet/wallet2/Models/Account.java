@@ -1,8 +1,6 @@
-package org.wallet.Models;
+package com.wallet.wallet2.Models;
 
 import lombok.*;
-
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor(force = true)

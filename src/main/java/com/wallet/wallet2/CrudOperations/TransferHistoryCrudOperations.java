@@ -1,11 +1,8 @@
-package org.wallet.CrudOperations;
+package com.wallet.wallet2.CrudOperations;
 
-import org.wallet.Components.TransferHistoryComponent;
-import org.wallet.Models.Currency;
-import org.wallet.Models.TranferHistory;
-import org.wallet.Models.Transaction;
-import org.wallet.connectionDB.ConnectionDB;
-
+import com.wallet.wallet2.Components.*;
+import com.wallet.wallet2.Models.*;
+import com.wallet.wallet2.connectionDB.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

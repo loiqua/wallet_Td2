@@ -1,9 +1,8 @@
-package org.wallet.CrudOperations;
+package com.wallet.wallet2.CrudOperations;
 
-import org.wallet.Components.TransactionComponent;
-import org.wallet.Models.Transaction;
-import org.wallet.connectionDB.ConnectionDB;
-
+import com.wallet.wallet2.Components.*;
+import com.wallet.wallet2.Models.*;
+import com.wallet.wallet2.connectionDB.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
     public List<Transaction> findAll() {
         List<Transaction> transactions = new ArrayList<>();
         try {
-            Connection connection = org.wallet.connectionDB.ConnectionDB.getConnection();
+            Connection connection = com.wallet.wallet2.connectionDB.ConnectionDB.getConnection();
             String sql = "SELECT * FROM transaction";
             Statement statement = connection.createStatement();
 
@@ -69,7 +68,7 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
 
 
         try {
-            Connection connection = org.wallet.connectionDB.ConnectionDB.getConnection();
+           Connection connection = com.wallet.wallet2.connectionDB.ConnectionDB.getConnection();
 
             PreparedStatement statement = connection.prepareStatement(sql);
 
@@ -100,7 +99,7 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
     public Transaction delete(Transaction toDelete) {
         Transaction deleted;
         try {
-            Connection connection = org.wallet.connectionDB.ConnectionDB.getConnection();
+            Connection connection = com.wallet.wallet2.connectionDB.ConnectionDB.getConnection();
             String sql = "DELETE FROM transaction WHERE transaction_id = ? RETURNING *";
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -120,35 +119,32 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
         return deleted;
     }
 
-    public List<TransactionComponent> getTransactionByAccountId(String accountId){
+    public List<TransactionComponent> getTransactionByAccountId(String accountId) {
         List<TransactionComponent> transactions = new ArrayList<>();
-        Connection connection = ConnectionDB.getConnection();
-        String sql = "SELECT * FROM \"transaction\" WHERE account_id = ?";
 
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+        try (Connection connection = ConnectionDB.getConnection();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM transaction WHERE account_id = ?")) {
 
             statement.setString(1, accountId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Transaction transaction = mapResultSet(resultSet);
 
-            ResultSet resultSet = statement.executeQuery();
+                    TransactionComponent component = new TransactionComponent(
+                            transaction.getTransactionId(),
+                            transaction.getDescription(),
+                            transaction.getAmount(),
+                            transaction.getTransactionDate(),
+                            transaction.getTransactionType(),
+                            transaction.getCategoryId()
+                    );
 
-            while(resultSet.next()){
-                Transaction transaction = mapResultSet(resultSet);
-
-                TransactionComponent component = new TransactionComponent(
-                        transaction.getTransactionId(),
-                        transaction.getDescription(),
-                        transaction.getAmount(),
-                        transaction.getTransactionDate(),
-                        transaction.getTransactionType(),
-                        transaction.getCategoryId()
-                );
-
-                transactions.add(component);
+                    transactions.add(component);
+                }
             }
-
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            // Gérer l'exception ou la propager en fonction du contexte
+            throw new RuntimeException("Error fetching transactions by account ID", e);
         }
 
         return transactions;
