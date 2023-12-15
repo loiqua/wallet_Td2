@@ -1,9 +1,8 @@
-package org.wallet.CrudOperations;
+package com.wallet.wallet2.CrudOperations;
 
-import org.wallet.Components.CurrencyComponent;
-import org.wallet.Models.Currency;
-import org.wallet.connectionDB.ConnectionDB;
-
+import com.wallet.wallet2.Components.*;
+import com.wallet.wallet2.Models.*;
+import com.wallet.wallet2.connectionDB.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
