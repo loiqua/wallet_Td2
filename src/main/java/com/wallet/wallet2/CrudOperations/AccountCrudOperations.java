@@ -1,7 +1,7 @@
 package org.wallet.CrudOperations;
 
 import org.wallet.Components.AccountComponent;
-import org.wallet.Components.BalanceComponent;
+import com.wallet.Components.BalanceComponent;
 import org.wallet.Models.Account;
 import org.wallet.Models.Balance;
 import org.wallet.Models.TranferHistory;
