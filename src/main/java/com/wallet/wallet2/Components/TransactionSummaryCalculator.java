@@ -29,7 +29,6 @@ package com.wallet.wallet2.Components;
             return totalAmount;
         }
 
-        // Method to calculate the sum of amounts per category between two dates for a specific account
         public static Map<String, Double> getCategoryAmountsBetweenDates(int accountId, Date startDate, Date endDate) {
             Map<String, Double> categoryAmounts = new HashMap<>();
             Connection connection = ConnectionDB.getConnection();
@@ -55,5 +54,20 @@ package com.wallet.wallet2.Components;
             }
 
             return categoryAmounts;
+        }
+
+        public static void main(String[] args) {
+            int accountId = 1; 
+            Date startDate = Date.valueOf("2023-12-01");
+            Date endDate = Date.valueOf("2023-12-02");
+
+            double totalAmount = getTotalAmountBetweenDates(accountId, startDate, endDate);
+            System.out.println("Total amount between dates: " + totalAmount);
+
+            Map<String, Double> categoryAmounts = getCategoryAmountsBetweenDates(accountId, startDate, endDate);
+            for (Map.Entry<String, Double> entry : categoryAmounts.entrySet()) {
+                System.out.println("Category: " + entry.getKey() + ", Amount: " + entry.getValue());
+            }
+            ConnectionDB.closeConnection();
         }
     }
