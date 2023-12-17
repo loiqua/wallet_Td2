@@ -1,11 +1,16 @@
 package com.wallet.wallet2.CrudOperations;
 
-import com.wallet.wallet2.Components.*;
-import com.wallet.wallet2.Models.*;
-import com.wallet.wallet2.connectionDB.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.wallet.wallet2.Components.TransactionComponent;
+import com.wallet.wallet2.Models.Transaction;
+import com.wallet.wallet2.connectionDB.ConnectionDB;
 
 public class TransactionCrudOperations implements CrudOperations<Transaction> {
     public static final String TRANSACTION_ID_COLUMN = "transaction_id";
@@ -15,9 +20,6 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
     public static final String TRANSACTION_TYPE_COLUMN = "transaction_type";
     public static final String ACCOUNT_ID_COLUMN = "account_id";
     public static final String CATEGORIE_ID_COLUMN = "category_id";
-
-
-
 
     @Override
     public List<Transaction> findAll() {
@@ -29,7 +31,7 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
 
             ResultSet resultSet = statement.executeQuery(sql);
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 Transaction transaction = mapResultSet(resultSet);
                 transactions.add(transaction);
             }
@@ -57,15 +59,14 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
         Transaction saved;
 
         String sql;
-        if(toSave.getTransactionId() == null){
+        if (toSave.getTransactionId() == null) {
             sql = "INSERT INTO transaction ( description,  amount, account_id,transaction_type,category_id) " +
                     "VALUES (?, ?, ?, CAST(? AS transaction_type),?) RETURNING *";
-        }else {
+        } else {
             sql = "UPDATE transaction " +
                     "SET description = ?,  amount = ?, account_id = ?, transaction_type = CAST(? AS transaction_type)" +
                     " , category_id = ? WHERE transaction_id = ? RETURNING *";
         }
-
 
         try {
             Connection connection = com.wallet.wallet2.connectionDB.ConnectionDB.getConnection();
@@ -76,9 +77,9 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
             statement.setObject(2, toSave.getAmount());
             statement.setString(3, toSave.getAccountId());
             statement.setString(4, toSave.getTransactionType());
-            statement.setString(5,toSave.getCategoryId());
+            statement.setString(5, toSave.getCategoryId());
 
-            if(toSave.getTransactionId() != null){
+            if (toSave.getTransactionId() != null) {
                 statement.setString(5, toSave.getTransactionId());
             }
 
@@ -119,7 +120,7 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
         return deleted;
     }
 
-    public List<TransactionComponent> getTransactionByAccountId(String accountId){
+    public List<TransactionComponent> getTransactionByAccountId(String accountId) {
         List<TransactionComponent> transactions = new ArrayList<>();
         Connection connection = ConnectionDB.getConnection();
         String sql = "SELECT * FROM \"transaction\" WHERE account_id = ?";
@@ -131,7 +132,7 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
 
             ResultSet resultSet = statement.executeQuery();
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 Transaction transaction = mapResultSet(resultSet);
 
                 TransactionComponent component = new TransactionComponent(
@@ -140,8 +141,7 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
                         transaction.getAmount(),
                         transaction.getTransactionDate(),
                         transaction.getTransactionType(),
-                        transaction.getCategoryId()
-                );
+                        transaction.getCategoryId());
 
                 transactions.add(component);
             }
@@ -153,7 +153,7 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
         return transactions;
     }
 
-    public Transaction getById(String id){
+    public Transaction getById(String id) {
         Connection connection = ConnectionDB.getConnection();
         String sql = "SELECT * FROM \"transaction\" WHERE transaction_id = ?";
         Transaction transaction = null;
@@ -165,7 +165,7 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
 
             ResultSet resultSet = statement.executeQuery();
 
-            if(resultSet.next()){
+            if (resultSet.next()) {
                 transaction = mapResultSet(resultSet);
             }
 
