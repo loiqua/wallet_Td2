@@ -23,4 +23,13 @@ public class Transaction {
         private String transactionType;
         @NonNull
         private String accountId;
+        private String categoryId;
+
+        public void setCategoryId(String categoryId) {
+                this.categoryId = categoryId;
+        }
+
+        public String getCategoryId() {
+                return categoryId;
+        }
 }

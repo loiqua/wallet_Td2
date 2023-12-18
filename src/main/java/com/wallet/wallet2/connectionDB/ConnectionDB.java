@@ -22,6 +22,7 @@ public class ConnectionDB {
         } catch (SQLException e) {
             throw new RuntimeException("Failed to establish a database connection", e);
         }
+
         return connection;
     }
 

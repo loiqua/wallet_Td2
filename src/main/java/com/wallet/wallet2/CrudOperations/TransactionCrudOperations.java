@@ -60,27 +60,26 @@ public class TransactionCrudOperations implements CrudOperations<Transaction> {
 
         String sql;
         if (toSave.getTransactionId() == null) {
-            sql = "INSERT INTO transaction ( description,  amount, account_id,transaction_type,category_id) " +
-                    "VALUES (?, ?, ?, CAST(? AS transaction_type),?) RETURNING *";
+            sql = "INSERT INTO transaction (description, amount, account_id, transaction_type, category_id) " +
+                    "VALUES (?, ?, ?, CAST(? AS transaction_type), ?) RETURNING *";
         } else {
             sql = "UPDATE transaction " +
-                    "SET description = ?,  amount = ?, account_id = ?, transaction_type = CAST(? AS transaction_type)" +
-                    " , category_id = ? WHERE transaction_id = ? RETURNING *";
+                    "SET description = ?, amount = ?, account_id = ?, transaction_type = CAST(? AS transaction_type)" +
+                    ", category_id = ? WHERE transaction_id = ? RETURNING *";
         }
 
         try {
-            Connection connection = com.wallet.wallet2.connectionDB.ConnectionDB.getConnection();
-
+            Connection connection = ConnectionDB.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql);
 
             statement.setString(1, toSave.getDescription());
             statement.setObject(2, toSave.getAmount());
             statement.setString(3, toSave.getAccountId());
             statement.setString(4, toSave.getTransactionType());
-            statement.setString(5, toSave.getCategoryId());
+            statement.setString(5, toSave.getCategoryId()); // Replace with the correct method
 
             if (toSave.getTransactionId() != null) {
-                statement.setString(5, toSave.getTransactionId());
+                statement.setString(6, toSave.getTransactionId());
             }
 
             statement.execute();
